@@ -7,7 +7,7 @@ exports.projectSchema = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 // Define Mongoose schemas using the interfaces
 const taskSchema = new mongoose_1.default.Schema({
-    project: String, //may be change back to task
+    task: String, //may be change back to task
     id: String,
     date: Date,
     parent: String,
