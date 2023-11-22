@@ -10,4 +10,5 @@ router.post("/breakdown", controller_1.getDataFromAPI);
 router.post("/projects", controller_1.postProject);
 router.get("/projects", controller_1.getProjects);
 router.delete("/projects", controller_1.deleteProject);
+router.put("/projects/toggleCompleted", controller_1.toggleCompleted);
 exports.default = router;

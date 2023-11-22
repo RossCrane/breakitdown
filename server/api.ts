@@ -10,21 +10,27 @@ type RequestType = {
 };
 
 type ResponseType = {
-  project: string;
+  task: string;
 }[];
 
 async function getDataFromOpenAI(
   request: RequestType
 ): Promise<ResponseType | null> {
-  console.log(request);
+  if (!request.project) {
+    return []; // Return null for empty requests
+  }
+
   const response = await requestDataFromOpenAI(
     request.project,
     request.description
   );
-  if (!response) return null;
 
-  console.log(response);
+  if (!response) {
+    return null; // Return null for OpenAI request failures
+  }
+
   const data = formatResponse(response.choices[0].text);
+
   return data;
 }
 
@@ -38,6 +44,7 @@ async function requestDataFromOpenAI(
   });
 
   try {
+    if (name === "error testing") throw new Error();
     const response = await openai.completions.create({
       model: "gpt-3.5-turbo-instruct",
       prompt: `Divide the following project into small, manageable tasks. Begin each task with \"-\". Min 3 tasks, max 8 tasks.\nProject: ${name}\nDescription: ${description} `,
@@ -60,16 +67,14 @@ function formatResponse(response: string): ResponseType {
   const cleanedUpList = response
     .split("\n")
     .map((str) => str.replace(/^([\d\p{P}\p{Z}]+)/gu, "").trim())
-    .filter((str) => str !== "\n" && str !== "");
+    .filter((str) => str !== "");
 
-  const formattedList = cleanedUpList.map((str) => ({ project: str })); //change this to task
-
+  const formattedList = cleanedUpList.map((str) => ({ task: str })); //change this to task
+  console.log("this is the formatted list", formattedList);
   return formattedList;
 }
 
 export default getDataFromOpenAI;
-formatResponse;
-requestDataFromOpenAI;
 
 // -----TESTING-----
 

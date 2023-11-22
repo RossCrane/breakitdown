@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProject = exports.getProjects = exports.postProject = exports.getDataFromAPI = void 0;
+exports.toggleCompleted = exports.deleteProject = exports.getProjects = exports.postProject = exports.getDataFromAPI = void 0;
 const api_1 = __importDefault(require("../api"));
 const index_1 = require("../models/index");
 function getDataFromAPI(req, res) {
@@ -76,4 +76,31 @@ function deleteProject(req, res) {
     });
 }
 exports.deleteProject = deleteProject;
-// await db.collection('inventory').deleteOne({ status: 'D' });
+function toggleCompleted(req, res // Specify the response type as Response<any>
+) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { projectId, taskId } = req.body;
+            const project = yield index_1.db.findOne({ id: projectId });
+            if (!project) {
+                res.status(404).send("Project not found");
+            }
+            else {
+                const task = project.tasks.find((t) => t.id === taskId);
+                if (task) {
+                    task.completed = !task.completed;
+                    yield project.save();
+                    res.status(200).json(project);
+                }
+                else {
+                    res.status(404).send("Task not found");
+                }
+            }
+        }
+        catch (error) {
+            console.error("Error toggling task completion:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    });
+}
+exports.toggleCompleted = toggleCompleted;

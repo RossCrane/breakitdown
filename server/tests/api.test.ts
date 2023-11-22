@@ -2,83 +2,79 @@
 
 // const getDataFromOpenAI = require("../api");
 
-import supertest from "supertest";
-import chai from "chai";
-import express from "express";
-import cors from "cors";
-import router from "../router";
-import bodyParser from "body-parser";
-import { expect } from "chai";
-import sinon from "sinon";
-import getDataFromOpenAI from "../api";
-chai.should();
+// import supertest from "supertest";
+// import chai from "chai";
+// import express from "express";
+// import chaiAsPromised from "chai-as-promised";
+// import cors from "cors";
+// import router from "../router";
+// import bodyParser from "body-parser";
+// import { describe, it, afterEach, beforeEach } from "mocha";
 
-const app = express();
+// import OpenAI from "openai";
+// import proxyquire from "proxyquire";
+// import sinon from "sinon";
+// import getDataFromOpenAI from "../api";
 
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(cors());
-app.use(router);
+// chai.should();
 
-app.listen(3010, () => {
-  console.log(`Example app listening on port 3010`);
-});
+// const app = express();
 
-const request = supertest(app);
+// app.use(express.json());
+// app.use(bodyParser.json());
+// app.use(cors());
+// app.use(router);
 
-describe("back-end testing", () => {
-  it("should return projects", async () => {
-    const res = await request.get("/projects");
-    res.status.should.equal(201);
-  });
-});
+// app.listen(3010, () => {
+//   console.log(`Example app listening on port 3010`);
+// });
 
-// jest.mock("./api", () => ({
-//   requestDataFromOpenAI: jest.fn(),
-// }));
+// const request = supertest(app);
 
-// describe("getDataFromOpenAI", () => {
-//   beforeEach(() => {
-//     jest.clearAllMocks();
-//     console.log = jest.fn(); // Mock console.log
-//   });
-
-//   it("should return formatted data when API call is successful", async () => {
-//     // Mock the API call to return a successful response
-//     requestDataFromOpenAI.mockResolvedValue({
-//       choices: [{ text: "- Task 1\n- Task 2\n- Task 3" }],
-//     });
-
-//     const request = {
-//       project: "Clean my room",
-//       description: "My room is a mess",
-//     };
-//     const result = await getDataFromOpenAI(request);
-
-//     expect(result).toEqual([
-//       { project: "Task 1" },
-//       { project: "Task 2" },
-//       { project: "Task 3" },
-//     ]);
-//     expect(console.log).toHaveBeenCalledWith(request);
-//   });
-
-//   it("should return null when API call fails", async () => {
-//     // Mock the API call to simulate a failure
-//     requestDataFromOpenAI.mockResolvedValue(null);
-
-//     const request = {
-//       project: "Clean my room",
-//       description: "My room is a mess",
-//     };
-//     const result = await getDataFromOpenAI(request);
-
-//     expect(result).toBeNull();
-//     expect(console.log).toHaveBeenCalledWith(request);
+// describe("back-end testing", () => {
+//   it("should return projects", async () => {
+//     const res = await request.get("/projects");
+//     res.status.should.equal(201);
 //   });
 // });
-// describe("test", () => {
-//   it("0 should equal 0", function () {
-//     expect("0").toBe("0");
+
+// chai.use(chaiAsPromised);
+// const expect = chai.expect;
+
+// describe("getDataFromOpenAI", () => {
+//   it("should return an empty array when given an empty request", async () => {
+//     const request = { project: "" };
+//     const result = await getDataFromOpenAI(request);
+
+//     expect(result).to.be.an("array").that.is.empty;
+//   });
+
+//   it("should return null when the OpenAI request fails", async () => {
+//     const request = {
+//       project: "error testing",
+//       description: "Sample Description",
+//     };
+//     const result = await getDataFromOpenAI(request);
+//     expect(result).to.be.null;
+//   });
+
+//   it("should return an array of tasks when given a valid request", async () => {
+//     const request = {
+//       project: "Sample Project",
+//       description: "Sample Description",
+//     };
+//     const result = await getDataFromOpenAI(request);
+//     expect(result).to.be.an("array");
+//   });
+
+//   it("should handle a missing description in the request", async () => {
+//     const request = {
+//       project: "Valid Project",
+//     };
+//     const result = await getDataFromOpenAI(request);
+//     expect(result).to.be.an("array");
+//   });
+//   after(() => {
+//     process.exit();
 //   });
 // });

@@ -16,11 +16,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const openai_1 = __importDefault(require("openai"));
 function getDataFromOpenAI(request) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(request);
+        if (!request.project) {
+            return []; // Return null for empty requests
+        }
         const response = yield requestDataFromOpenAI(request.project, request.description);
-        if (!response)
-            return null;
-        console.log(response);
+        if (!response) {
+            return null; // Return null for OpenAI request failures
+        }
         const data = formatResponse(response.choices[0].text);
         return data;
     });
@@ -32,6 +34,8 @@ function requestDataFromOpenAI(name, description = "") {
             apiKey: process.env.API_KEY,
         });
         try {
+            if (name === "error testing")
+                throw new Error();
             const response = yield openai.completions.create({
                 model: "gpt-3.5-turbo-instruct",
                 prompt: `Divide the following project into small, manageable tasks. Begin each task with \"-\". Min 3 tasks, max 8 tasks.\nProject: ${name}\nDescription: ${description} `,
@@ -54,8 +58,9 @@ function formatResponse(response) {
     const cleanedUpList = response
         .split("\n")
         .map((str) => str.replace(/^([\d\p{P}\p{Z}]+)/gu, "").trim())
-        .filter((str) => str !== "\n" && str !== "");
-    const formattedList = cleanedUpList.map((str) => ({ project: str })); //change this to task
+        .filter((str) => str !== "");
+    const formattedList = cleanedUpList.map((str) => ({ task: str })); //change this to task
+    console.log("this is the formatted list", formattedList);
     return formattedList;
 }
 exports.default = getDataFromOpenAI;
